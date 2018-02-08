@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "116969635238",
-    "firebase_url": "https://whistlebuddy-37885.firebaseio.com",
-    "project_id": "whistlebuddy-37885",
-    "storage_bucket": "whistlebuddy-37885.appspot.com"
+    "project_number": "900433414769",
+    "firebase_url": "https://whistlebuddy-cc4d7.firebaseio.com",
+    "project_id": "whistlebuddy-cc4d7",
+    "storage_bucket": "whistlebuddy-cc4d7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:116969635238:android:2480e63ad6d7b828",
+        "mobilesdk_app_id": "1:900433414769:android:2480e63ad6d7b828",
         "android_client_info": {
           "package_name": "com.whistlebuddy.chand.whistlebuddy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "116969635238-kk1ju6563ipqlob8n6r4fkask4efq224.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.whistlebuddy.chand.whistlebuddy",
-            "certificate_hash": "0074e48c89fccfc7eebc38dcd820332176870cee"
-          }
-        },
-        {
-          "client_id": "116969635238-3dn6tvslc0mos0bfftq440bmmj8k3u1f.apps.googleusercontent.com",
+          "client_id": "900433414769-954l26qtudepe553k7l3m5p8260o5pvb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCRv5H5YNKmtd9tskFdgWgm2166e82Ikgg"
+          "current_key": "AIzaSyC2M_eB9riVRv9hdTlwy_fAsFlUt8iAO2I"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "116969635238-3dn6tvslc0mos0bfftq440bmmj8k3u1f.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

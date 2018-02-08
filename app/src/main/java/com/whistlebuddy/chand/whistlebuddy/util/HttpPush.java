@@ -14,7 +14,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class HttpPush {
     private final String ContentType = "application/json";
-    private final String Authorization = "key=AIzaSyDyDft2S01ofEKsnOthABb4qRpDXbEE_kw";
+    private final String Authorization = "key=AIzaSyC7Gb2_ASeYb3byB5HCMITRgIZOmZt8clM";
     // HTTP POST request
     public void sendPost(String message, String RegId, String SenderId) throws Exception {
         new NetworkAsyncTask().execute(message, RegId, SenderId);
@@ -36,10 +36,13 @@ public class HttpPush {
             String urlParameters = "{\r\n" +
                     "   \"notification\": {\r\n" +
                     "      \"title\": \"Alert!\",\r\n" +
-                    "      \"body\": \""+params[0]+"\",\r\n" +
+                    "      \"body\": \""+params[0]+"\"\r\n" +
+                   // "      \"click_action\": \".MapActivity\"\r\n" +
                     "   },\r\n" +
                     "   \"data\": {\r\n" +
                     "      \"senderid\": \""+params[2]+"\",\r\n" +
+                    "      \"body\": \""+params[0]+"\",\r\n" +
+                    "      \"title\": \"Alert!\",\r\n" +
                     "   },\r\n" +
                     "   \"to\": \""+params[1]+"\"\r\n" +
                     "}";

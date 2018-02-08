@@ -38,13 +38,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapView);
-        String origin = getIntent().getExtras().getString("origin");
         myDB = FirebaseDatabase.getInstance();
         myRef = myDB.getReference("users");
-        if(origin.contains("notification")){
-            SenderId = getIntent().getExtras().getString("senderid");
-            //plot sender location
-            plotSenderLocation(SenderId);
+        if(getIntent().getExtras()!=null)
+        {
+            for(String key : getIntent().getExtras().keySet())
+            {
+                if(key.contains("senderid"))
+                {
+                        SenderId = getIntent().getExtras().getString("senderid");
+                        //plot sender location
+                        plotSenderLocation(SenderId);
+                }
+            }
         }
 
         mapFragment.getMapAsync(this);

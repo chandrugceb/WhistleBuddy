@@ -1,8 +1,10 @@
 package com.whistlebuddy.chand.whistlebuddy;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,6 +43,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.whistlebuddy.chand.whistlebuddy.util.HttpPush;
+import com.whistlebuddy.chand.whistlebuddy.util.MyFirebaseMessagingService;
 import com.whistlebuddy.chand.whistlebuddy.util.User;
 
 import java.util.Date;
@@ -66,6 +71,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String DisplayName;
     CountDownTimer currentTimer;
     LocationManager locationManager;
+
+
+    /**
+     * Broadcast receiver to receive the data
+     */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Broadcast","onReceive method triggered"+intent.getExtras().keySet().toString());
+            if(intent.getExtras()!=null)
+            {
+                for(String key : intent.getExtras().keySet())
+                {
+                    if(key.contains("senderid"))
+                    {
+                        //plot sender location
+                        //plotSenderLocation(SenderId);
+                        Intent mapIntent = new Intent(MainActivity.this, MapActivity.class);
+                        mapIntent.putExtra("senderid",intent.getExtras().getString("senderid"));
+                        Toast.makeText(MainActivity.this,intent.getExtras().getString("body"),Toast.LENGTH_LONG).show();
+                        startActivity(mapIntent);
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateUI(final GoogleSignInAccount account) {
         if (account != null) {
+            this.account = account;
             signInButton.setVisibility(View.INVISIBLE);
             tvLoggedUser.setVisibility(View.VISIBLE);
             etTimerText.setVisibility(View.VISIBLE);
@@ -271,6 +304,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Implement the behavior for Each Alert Colors
     public void onAlert(String alert) {
+        if(account == null){
+            Toast.makeText(this,"Please try again after few seconds, account is loading now", Toast.LENGTH_LONG).show();
+            return;
+        }
         switch (alert) {
             case "Red":
                 myRef.child(account.getId()).child("status").setValue("Red");
@@ -380,6 +417,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setCountDownToCloud(String Seconds) {
+        if(account == null){
+            Toast.makeText(this,"Please try again after few seconds, account is loading now", Toast.LENGTH_LONG).show();
+            return;
+        }
         myCountRef = myDB.getReference("users");
         myCountRef.child(account.getId()).child("seconds").setValue(Seconds);
     }
@@ -465,5 +506,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myLocationHistory.child(String.valueOf(mydate.getTime())).child("lat").setValue(location.getLatitude());
                 myLocationHistory.child(String.valueOf(mydate.getTime())).child("long").setValue(location.getLongitude());
             }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // unregister local broadcast
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register local broadcast
+        IntentFilter filter = new IntentFilter(MyFirebaseMessagingService.CUSTOM_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 }

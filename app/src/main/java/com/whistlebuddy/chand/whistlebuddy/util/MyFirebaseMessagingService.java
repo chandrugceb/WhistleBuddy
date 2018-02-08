@@ -13,7 +13,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,6 +28,7 @@ import com.whistlebuddy.chand.whistlebuddy.R;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    public static final String CUSTOM_ACTION = "MyFirebaseMsgService";
 
     /**
      * Called when message is received.
@@ -35,7 +38,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
+        Log.d(TAG,"remoteMessage getData() is : "+remoteMessage.getData().toString());
+        Log.d(TAG,"remoteMessage getNotification() is : "+remoteMessage.getNotification().toString());
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
@@ -43,11 +47,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
         }
-
+        /*
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getBody(),remoteMessage.getData().get("senderid"));
+        }
+        */
+        if (remoteMessage.getData() != null) {
+            Log.d(TAG, "Message Data Body: " + remoteMessage.getData().get("body"));
+            sendNotification(remoteMessage.getData().get("body"),remoteMessage.getData().get("senderid"));
+            Intent intent = new Intent(CUSTOM_ACTION);
+            intent.putExtra("senderid",remoteMessage.getData().get("senderid"));
+            intent.putExtra("body",remoteMessage.getData().get("body"));
+            // send local broadcast
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
        Log.d(TAG,"sender id is " + remoteMessage.getData().get("senderid"));
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -61,6 +75,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param messageBody FCM message body received.
      */
     private void sendNotification(String messageBody, String SenderId) {
+
+        Log.d("MFMSSN",messageBody+"|"+SenderId);
+
+        //Toast.makeText(getApplicationContext(),"["+messageBody+"|"+SenderId+"]",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("origin","notification");
         intent.putExtra("senderid",SenderId);
