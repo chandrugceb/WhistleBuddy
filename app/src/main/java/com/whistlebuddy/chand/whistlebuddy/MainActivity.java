@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myRef.child(account.getId()).child("status").setValue("Red");
                 try {
                     Alert = "Red";
-                    postMessage(account.getId());
+                    //postMessage(account.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myRef.child(account.getId()).child("status").setValue("Amber");
                 try {
                     Alert = "Amber";
-                    postMessage(account.getId());
+                   // postMessage(account.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
